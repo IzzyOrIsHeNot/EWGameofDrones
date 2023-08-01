@@ -16,7 +16,6 @@ public class ArduinoListener : MonoBehaviour
 	SerialPort Port;
 	
 	// set in inspector
-	public string COM;					// the serial port the arduino can be accessed from
 	public CageRenderer Cage;			// reference to CageRenderer for calculations
 	public GameObject PingTemplate;		// reference to template ping object
 	public TMP_Text PingTextTemplate;	// reference to template ping text object
@@ -38,13 +37,6 @@ public class ArduinoListener : MonoBehaviour
 		Manager = GameObject.Find("Sensors").GetComponent<SensorManager>() as SensorManager;
 		Manager.UpdateSensors();
 		
-		// open serial port communication with the Arduino
-		Port = new SerialPort();
-		Port.PortName = COM;	// set in inspector in format "COMX" where X is the COM number
-		Port.BaudRate = 115200;	// matches the baud rate in the Arduino's code
-		Port.DtrEnable = true;	// seems to help with preventing split packets
-		Port.Open();			// open the port
-		
 		// find all sensor types by finding subclasses of "Sensor"
         System.Type[] subclasses = System.AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(assembly => assembly.GetTypes())
@@ -64,9 +56,38 @@ public class ArduinoListener : MonoBehaviour
         }
     }
 	
+	public void Connect(int comNum)
+	{
+		// open serial port communication with the Arduino
+		Port = new SerialPort();
+		Port.PortName = "COM" + comNum.ToString();	// set in inspector in format "COMX" where X is the COM number
+		Port.BaudRate = 115200;	// matches the baud rate in the Arduino's code
+		Port.DtrEnable = true;	// seems to help with preventing split packets
+		
+		// try to open the COM port
+		try
+		{
+			// open the port
+			Port.Open();			
+		}
+		catch
+		{
+			// if the port wasn't able to be opened,
+			// keep Port as null
+			Port = null;
+		}
+	}
+	
 	// Update is called once every frame
 	void Update()
 	{
+		// do nothing if not connected to the Arduino Coordinator
+		if (Port == null)
+		{
+				return;
+		}
+		
+		
 		if (JamTimeBuffer > 0f)
 		{
 			// jam all sensors

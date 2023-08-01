@@ -7,6 +7,7 @@
 #include "SparkFun_UHF_RFID_Reader.h" //Library for controlling the M6E Nano module
 #include "binary.h"
 #include "pitches.h"
+#include <HardwareSerial.h>
 
 RFID nano; //Create instance
 SoftwareSerial NanoSoftSerial(4, 5);  //RX, TX Nano
@@ -96,8 +97,8 @@ void setup()
 
   nano.setRegion(REGION_NORTHAMERICA); //Set to North America
 
-  nano.setReadPower(1500); //Limited read range
-  //nano.setReadPower(2700); //You'll need an external power supply for this setting
+  //nano.setReadPower(1500); //Limited read range
+  nano.setReadPower(2700); //You'll need an external power supply for this setting
   //Max Read TX Power is 27.00 dBm and may cause temperature-limit throttling
 
   nano.startReading(); //Begin scanning for tags
@@ -150,7 +151,7 @@ void xbeeSendPacket(int current_rssi){
 }
 void xbeeSendNullPacket(){
   // For debugging purposes 
-  /*DebugSerial.println("Sending NULL packet");
+  DebugSerial.println("Sending NULL packet");
   
   // Allocate <X> payload bytes: 1 type byte plus however many other data bytes needed
   // Prepare the Zigbee Transmit Request API packet
@@ -170,7 +171,7 @@ void xbeeSendNullPacket(){
   txRequest.setPayload(packet.head, packet.len());
 
   // Send the packet
-  xbee.send(txRequest);*/
+  xbee.send(txRequest);
 
 }
 
