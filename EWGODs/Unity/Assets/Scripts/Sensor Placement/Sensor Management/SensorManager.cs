@@ -103,4 +103,22 @@ public class SensorManager : MonoBehaviour
 	{
 		return Sensors;
 	}
+	
+	/*public void ClearSensors()
+	{
+		ClearSensors(true);
+	}
+	
+	public void ClearSensors(bool destroySensors)
+	{
+		if (destroySensors)
+		{
+			foreach (SensorRenderer renderer in Sensors)
+			{
+				Destroy(renderer.gameObject);
+			}
+		}
+		
+		Sensors = new List<SensorRenderer>();
+	}*/
 }
