@@ -76,12 +76,12 @@ public class OMNISonic : Sensor
 		string jamPacket = "";
 		
 		// OMNISonic pings are in the form type,id,distance,hrotation,vrotation
-		// generate distance between 0 and 1000
+		// generate distance between 0 and 180 inches
 		// generate hrotation between -180 and 180
 		// generate vrotation between -90 and 90
 		jamPacket += Type.ToString() + ",";
 		jamPacket += SensorData.id.ToString() + ",";
-		jamPacket += ((int)Mathf.Ceil(UnityEngine.Random.value * 1000f)).ToString() + ",";
+		jamPacket += ((int)Mathf.Ceil(UnityEngine.Random.value * 180f)).ToString() + ",";
 		jamPacket += ((int)Mathf.Ceil((UnityEngine.Random.value * 360f) - 180f)).ToString() + ",";
 		jamPacket += ((int)Mathf.Ceil((UnityEngine.Random.value * 180) - 90f)).ToString();
 		
