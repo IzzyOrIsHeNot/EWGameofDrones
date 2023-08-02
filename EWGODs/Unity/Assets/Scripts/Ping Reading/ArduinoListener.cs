@@ -20,6 +20,11 @@ public class ArduinoListener : MonoBehaviour
 	public GameObject PingTemplate;		// reference to template ping object
 	public TMP_Text PingTextTemplate;	// reference to template ping text object
 	public SensorManager Manager;		// for accessing sensor data
+	public TMP_Text ConnectionFail;		// message signifying a failed connection
+	public TMP_Text ConnectionSucceed;	// message signifying successful connection
+	public TMP_Text NoConnection;		// instructions for connecting to coordinator
+	
+	GameObject ConnectionMessage;
 	
 	// list of types of sensors that can handle ping packets
 	List<Sensor> Sensors = new List<Sensor>();
@@ -69,17 +74,33 @@ public class ArduinoListener : MonoBehaviour
 		Port.BaudRate = 115200;	// matches the baud rate in the Arduino's code
 		Port.DtrEnable = true;	// seems to help with preventing split packets
 		
+		if (ConnectionMessage != null)
+			{
+				Destroy(ConnectionMessage);
+				ConnectionMessage = null;
+			}
+		
 		// try to open the COM port
 		try
 		{
 			// open the port
-			Port.Open();			
+			Port.Open();
+			
+			NoConnection.gameObject.SetActive(false);
+			ConnectionSucceed.text = "Connected to Coordinator on COM" + comNum.ToString();
+			ConnectionMessage = Instantiate(ConnectionSucceed.gameObject, ConnectionSucceed.transform.parent);
+			ConnectionMessage.SetActive(true);
 		}
 		catch
 		{
 			// if the port wasn't able to be opened,
 			// keep Port as null
 			Port = null;
+			
+			NoConnection.gameObject.SetActive(true);
+			ConnectionFail.text = "Connection Failed on COM" + comNum.ToString();
+			ConnectionMessage = Instantiate(ConnectionFail.gameObject, ConnectionFail.transform.parent);
+			ConnectionMessage.SetActive(true);
 		}
 	}
 	

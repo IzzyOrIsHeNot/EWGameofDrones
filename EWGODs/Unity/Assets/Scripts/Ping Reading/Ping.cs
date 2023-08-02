@@ -23,10 +23,6 @@ public class Ping
 			// set to a null packet so the constructor can finish
 			dataPoints = new string[2]{"2", "1"};
 		}
-		foreach(string str in dataPoints)
-		{
-			Debug.Log(str);
-		}
 		
 		// get the type and id from the first two data entries
 		type = Convert.ToUInt16(dataPoints[0]);
