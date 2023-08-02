@@ -5,14 +5,17 @@ using UnityEngine;
 public class QuitListener : MonoBehaviour
 {
 
+	// set in inspector
+	public GameObject ConfirmationBox;
+	
     // Update is called once per frame
     void Update()
     {
 		// quit if ESC pressed
         if (Input.GetKeyUp(KeyCode.Escape))
 		{
-			// quit
-			Application.Quit();
+			// open confirmation box
+			ConfirmationBox.SetActive(true);
 		}
     }
 }
