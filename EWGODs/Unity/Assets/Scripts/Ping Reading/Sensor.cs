@@ -109,19 +109,20 @@ public abstract class Sensor : MonoBehaviour
 		
 		// prepare the altitude text
 		// (altitude is inverted)
+		if ((-Mathf.Abs(coord.z)).ToString("n2") == "0.00")
+		{
+			// display nothing if no significant verticality
+			PingTextTemplate.text = "";
+		}
 		if (coord.z < 0f)
 		{
 			// set the text in the format: "+x.xx"
 			PingTextTemplate.text = "+" + (-coord.z).ToString("n2");
 		}
-		else if (coord.z > 0f)
+		else
 		{
 			// set the text in the format: "-x.xx"
 			PingTextTemplate.text = (-coord.z).ToString("n2");
-		}
-		else
-		{
-			PingTextTemplate.text = "";
 		}
 		
 		// create the text object
@@ -129,7 +130,7 @@ public abstract class Sensor : MonoBehaviour
 		
 		// set the text's position
 		Vector3 textPos = pingObject.transform.position;	// get position from ping
-		textPos.z = 0.1f;	// keep in front of other elements
+		textPos.z = 0f;	// keep in front of other elements
 		pingText.transform.position = textPos;	// set position of text
 		
 		// make the text visible
