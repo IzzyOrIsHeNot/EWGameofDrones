@@ -108,12 +108,12 @@ public abstract class Sensor : MonoBehaviour
 		pingObject.SetActive(true);										// activate ping
 		
 		// prepare the altitude text
-		if ((Mathf.Abs(coord.z)).ToString("n2") == "0.00")
+		if (coord.z.ToString("n2") == "0.00")
 		{
 			// display nothing if no significant verticality
 			PingTextTemplate.text = "";
 		}
-		if (coord.z > 0f)
+		else if (coord.z > 0f)
 		{
 			// set the text in the format: "+x.xx"
 			PingTextTemplate.text = "+" + (coord.z).ToString("n2");
