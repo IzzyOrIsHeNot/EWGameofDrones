@@ -34,6 +34,8 @@ public class BackButton : MonoBehaviour
 				
 				// add the sensor as an option to the dropdown
 				dropdown.AddNew(config.id);
+				
+				dropdown.UpdateInputs();
 			}
 			
 			// destroy this object to prevent it from activating again

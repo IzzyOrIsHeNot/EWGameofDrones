@@ -104,6 +104,14 @@ public class SensorDropdown : MonoBehaviour
 		}
 	}
 	
+	// update the inputs to match the option selected
+	// usually this is done automatically
+	public void UpdateInputs()
+	{
+		// update the inputs
+		OnIndexChange(Dropdown.value);
+	}
+	
 	// runs when the dropdown changes
 	// (more specifically, when Dropdown.value changes. It is possible
 	// for the dropdown to change without Dropdown.value changes i.e. when
