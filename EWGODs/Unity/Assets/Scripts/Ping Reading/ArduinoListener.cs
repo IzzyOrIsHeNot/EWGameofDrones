@@ -58,6 +58,11 @@ public class ArduinoListener : MonoBehaviour
 	
 	public void Connect(int comNum)
 	{
+		if (Port != null)
+		{
+			Port.Close();
+		}
+		
 		// open serial port communication with the Arduino
 		Port = new SerialPort();
 		Port.PortName = "COM" + comNum.ToString();	// set in inspector in format "COMX" where X is the COM number
