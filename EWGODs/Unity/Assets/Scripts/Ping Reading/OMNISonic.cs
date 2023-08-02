@@ -25,10 +25,15 @@ public class OMNISonic : Sensor
 		// formula:
 		//	x' = x*Cos(theta) - y*Sin(phi)
 		//	y' = y*Cos(theta) + x*Sin(phi)
-		coord.x = Cage.FeetToPixels(distance / 12f) * Mathf.Cos(Mathf.Deg2Rad * (SensorData.hRotation + hRotation)) * Mathf.Sin(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation));
-		coord.y = Cage.FeetToPixels(distance / 12f) * Mathf.Sin(Mathf.Deg2Rad * (SensorData.hRotation + hRotation)) * Mathf.Sin(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation));
-		coord.z = Cage.FeetToPixels(distance / 12f) * Mathf.Cos(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation));
-		
+		coord.x = Cage.FeetToPixels(distance / 12f) * 
+			Mathf.Cos(Mathf.Deg2Rad * (SensorData.hRotation + hRotation)) * 
+			Mathf.Sin(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation));
+		coord.y = Cage.FeetToPixels(distance / 12f) * 
+			Mathf.Sin(Mathf.Deg2Rad * (SensorData.hRotation + hRotation)) * 
+			Mathf.Sin(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation));
+		coord.z = (distance / 12f) * 
+			Mathf.Cos(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation));
+		Debug.Log((distance / 12f).ToString() + "ft * " + Mathf.Cos(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation)).ToString() + " = " + coord.z.ToString());
 		//coord *= Mathf.Sin(Mathf.Deg2Rad * (SensorData.vRotation + vRotation));
 		
 		coord = AddSensorPosition(coord);

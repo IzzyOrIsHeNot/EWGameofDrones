@@ -24,9 +24,19 @@ public class Ping
 			dataPoints = new string[2]{"2", "1"};
 		}
 		
-		// get the type and id from the first two data entries
-		type = Convert.ToUInt16(dataPoints[0]);
-		id = Convert.ToUInt16(dataPoints[1]);
+		try
+		{
+			// get the type and id from the first two data entries
+			type = Convert.ToUInt16(dataPoints[0]);
+			id = Convert.ToUInt16(dataPoints[1]);
+		}
+		catch
+		{
+			type = 2;
+			id = 1;
+			Debug.Log("Error parsing ping");
+			Debug.Log(dataPoints[0]);
+		}
 		
 		// store the rest of the packet
 		data = new List<string>();	// create list

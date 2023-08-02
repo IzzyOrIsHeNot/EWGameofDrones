@@ -108,21 +108,20 @@ public abstract class Sensor : MonoBehaviour
 		pingObject.SetActive(true);										// activate ping
 		
 		// prepare the altitude text
-		// (altitude is inverted)
-		if ((-Mathf.Abs(coord.z)).ToString("n2") == "0.00")
+		if ((Mathf.Abs(coord.z)).ToString("n2") == "0.00")
 		{
 			// display nothing if no significant verticality
 			PingTextTemplate.text = "";
 		}
-		if (coord.z < 0f)
+		if (coord.z > 0f)
 		{
 			// set the text in the format: "+x.xx"
-			PingTextTemplate.text = "+" + (-coord.z).ToString("n2");
+			PingTextTemplate.text = "+" + (coord.z).ToString("n2");
 		}
 		else
 		{
 			// set the text in the format: "-x.xx"
-			PingTextTemplate.text = (-coord.z).ToString("n2");
+			PingTextTemplate.text = (coord.z).ToString("n2");
 		}
 		
 		// create the text object
@@ -220,7 +219,7 @@ public abstract class Sensor : MonoBehaviour
 		
 		// apply the rotation of the sensor to the coordinate
 		sphericalCoord.y += Mathf.Deg2Rad * SensorData.hRotation;
-		sphericalCoord.z += Mathf.Deg2Rad * SensorData.vRotation;
+		sphericalCoord.z += Mathf.Deg2Rad * -SensorData.vRotation;
 		
 		// convert back to Cartesian coordinates
 		// formulas are:
@@ -232,8 +231,8 @@ public abstract class Sensor : MonoBehaviour
 		cartesianCoord.y = sphericalCoord.x * Mathf.Sin(sphericalCoord.z) * Mathf.Sin(sphericalCoord.y);
 		cartesianCoord.z = sphericalCoord.x * Mathf.Cos(sphericalCoord.z);
 		
-		Debug.Log(SensorData.vRotation);
-		Debug.Log(sphericalCoord.x.ToString() + ", " + (Mathf.Rad2Deg * sphericalCoord.y).ToString() + " " + (Mathf.Rad2Deg * sphericalCoord.z).ToString());
+		//Debug.Log(SensorData.vRotation);
+		//Debug.Log(sphericalCoord.x.ToString() + ", " + (Mathf.Rad2Deg * sphericalCoord.y).ToString() + " " + (Mathf.Rad2Deg * sphericalCoord.z).ToString());
 		
 		// reapply the sensor's position
 		cartesianCoord += sensorCoord;

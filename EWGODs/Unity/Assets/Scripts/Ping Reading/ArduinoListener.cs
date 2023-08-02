@@ -133,7 +133,15 @@ public class ArduinoListener : MonoBehaviour
 			
 		
 		// read the data being transmitted
-		Buffer += Port.ReadExisting();
+		try
+		{
+			Buffer += Port.ReadExisting();
+		}
+		catch
+		{
+			Port = null;
+			return;
+		}
 		
 		// if the buffer contains "\r\n", then the end of a packet has been read
 		while (Buffer.Contains("\r\n"))
