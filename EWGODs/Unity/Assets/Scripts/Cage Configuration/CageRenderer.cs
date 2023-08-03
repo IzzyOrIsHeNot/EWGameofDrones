@@ -225,7 +225,7 @@ public class CageRenderer : MonoBehaviour
 			
 			// scale the zone to fit the left area and place it there
 			DroneStartBox.transform.localScale = new Vector3(leftSectorBorder - left, up - down, 1);
-			DroneStartBox.transform.position = new Vector3((leftSectorBorder + left) / 2, (up + down) / 2, 1.25f);
+			DroneStartBox.transform.localPosition = new Vector3((leftSectorBorder + left) / 2, (up + down) / 2, 1.25f);
 		}
 		else
 		{
