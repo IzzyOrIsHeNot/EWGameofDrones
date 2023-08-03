@@ -42,6 +42,7 @@ public class SensorManager : MonoBehaviour
 		// make sure that we have access to a renderer object to display
 		if (renderer == null)
 		{
+			Debug.Log("null renderer");
 			// if a sensor for the specified id doesn't already exist, create it
 			GameObject newSensor = Instantiate(SensorTemplate, transform);			// create the visual sensor
 			newSensor.SetActive(true);												// activate the visual
@@ -104,21 +105,26 @@ public class SensorManager : MonoBehaviour
 		return Sensors;
 	}
 	
-	/*public void ClearSensors()
+	// hide a specific sensor from view
+	public void HideSensor(uint id)
 	{
-		ClearSensors(true);
+		// find the sensor and deactivate it
+		SensorRenderer renderer = FindSensor(id);
+		
+		if (renderer != null)
+		{
+			renderer.gameObject.SetActive(false);
+		}
 	}
 	
-	public void ClearSensors(bool destroySensors)
+	// ensure all sensors are visible
+	public void ShowAllSensors()
 	{
-		if (destroySensors)
+		// loop through each sensor
+		foreach(SensorRenderer renderer in Sensors)
 		{
-			foreach (SensorRenderer renderer in Sensors)
-			{
-				Destroy(renderer.gameObject);
-			}
+			// activate the sensor's sprite
+			renderer.gameObject.SetActive(true);
 		}
-		
-		Sensors = new List<SensorRenderer>();
-	}*/
+	}
 }
