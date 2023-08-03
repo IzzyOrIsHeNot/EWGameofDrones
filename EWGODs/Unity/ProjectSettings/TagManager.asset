@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Sensor Manager
   - Sensor Dropdown
+  - Ruler
   layers:
   - Default
   - TransparentFX

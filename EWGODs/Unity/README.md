@@ -6,9 +6,13 @@ NOTE: The GUI is designed for the resolution: 1920x1200 and may not display prop
 
 This screen allows the user to configure the dimensions of the drone cage being used. The dropdown menu contains saved cage configurations as well as the option to configure a new cage. Saved cage configurations are edit locked by default, but can be edited after clicking on the edit toggle. Click "Select" when ready to proceed with the currently selected cage configuration
 
+Pressing the ESCAPE key in this screen will open the option to quit the application.
+
 # **Screen 2**
 
 This screen allows the user to configure the sensors being used. The uppermost dropdown menu allows the selection of existing sensors for modification or the selection of a new sensor. As sensor configuration data is modified, the user can see a visual representation of the sensor as well. Sensor data is not saved until the "Save" button is clicked. When satisfied with the configuration of all sensors, click the "Confirm" button.
+
+Pressing the ESCAPE key in this screen will return to the Cage Configuration screen.
 
 # **Screen 3**
 
@@ -18,7 +22,7 @@ If the ping contains some vertical position data (either do to a vertical compon
 
 When this screen first opens, the GUI will attempt to connect to the Arduino Coordinator on COM 4. If the Arduino Coordinator is not connected to COM 4 (this can be checked in Device Manager), the user can attempt to connect or reconnect to the Arduino Coordinator by pressing a number key corresponding to the COM port to attempt connection with.
 
-Pressing the ESCAPE key in this screen will return to the Sensor Placement screen. Pressing ESCAPE in any other screen will quit the application.
+Pressing the ESCAPE key in this screen will return to the Sensor Placement screen.
 
 # **Development Setup Guide**
 
@@ -274,6 +278,13 @@ Methods
 ### **VerticalRotationPreview : MonoBehaviour**
 
 - Displays an indicator on screen corresponding with the vertical rotation input field
+
+###
+
+
+### **BackToCageButton : MonoBehaviour**
+
+- Resets the application to the first menu when escape key is pressed
 
 ##
 
@@ -580,7 +591,7 @@ Properties
 - SensorPreview (has SensorPreview.cs attached. Manages the preview visual on screen)
 - Vertical Rotation Indicator (has VerticalRotationPreview.cs attached. displays an indicator of the vertical rotation of the selected sensor)
   - Arrow (the arrow that is pointed by the Vertical Rotation Indicator)
-- QuitListener (has QuitListener.cs attached. listens for ESC to be pressed then opens the quit confirmation sub-menu)
+- BackListener (has BackToCageButton.cs attached. listens for ESC to be pressed returns to previous scene)
 
 ## **SensorReadings**
 
@@ -645,6 +656,7 @@ Properties
       - SensorSaver.cs
     - User Input
       - AddingButton.cs
+      - BackToCageButton.cs
       - ConfirmButton.cs
       - Constrainer.cs
       - FloatConstrainer.cs
