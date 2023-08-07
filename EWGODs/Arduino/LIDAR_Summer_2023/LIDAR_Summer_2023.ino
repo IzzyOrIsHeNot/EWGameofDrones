@@ -18,7 +18,7 @@ AltSoftSerial SoftSerial;
 #define DebugSerial Serial // used to send/receive from MATLAB and/or Arduino serial monitor debugging 
 #define XBeeSerial SoftSerial // using software serial for Xbee comms
 
-XBeeAddress64 addr64 = XBeeAddress64(0x0013A200, 0x41C165F8); // Current Actual Coordinator
+//XBeeAddress64 addr64 = XBeeAddress64(0x0013A200, 0x41C165F8); // Current Actual Coordinator
 
 // Payload 
 int sensorID = 4;

@@ -143,7 +143,7 @@ void sendJamPacket()
 
   AllocBuffer<7> packet;
 
-  int targetType = 1; // 0 is all sensor types targeted
+  int targetType = 0; // 0 is all sensor types targeted
   int targetID = 0;   // 0 is all sensor ids targeted
 
   // Construct a jam packet in the format:
