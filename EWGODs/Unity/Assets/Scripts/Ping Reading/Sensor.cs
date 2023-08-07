@@ -26,7 +26,7 @@ public abstract class Sensor : MonoBehaviour
 	}
 	
 	// create fake packets for all sensors matching the type of this instance
-	public void Jam()
+	public void Jam(uint id)
 	{
 		// find all sensors
 		List<SensorRenderer> renderers = Manager.GetSensors();
@@ -34,8 +34,8 @@ public abstract class Sensor : MonoBehaviour
 		// check each sensor
 		foreach (SensorRenderer renderer in renderers)
 		{
-			// compare the sensor's type with the type of this Sensor instance
-			if (renderer.Config.type == this.GetType().Name)
+			// compare the sensor's type and id with the type of this Sensor instance
+			if (renderer.Config.type == this.GetType().Name && (renderer.Config.id == id || id == 0))
 			{
 				// if they match, generate fake pings.
 				// start by loading in the data for the current sensor

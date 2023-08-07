@@ -42,7 +42,6 @@ public class SensorManager : MonoBehaviour
 		// make sure that we have access to a renderer object to display
 		if (renderer == null)
 		{
-			Debug.Log("null renderer");
 			// if a sensor for the specified id doesn't already exist, create it
 			GameObject newSensor = Instantiate(SensorTemplate, transform);			// create the visual sensor
 			newSensor.SetActive(true);												// activate the visual

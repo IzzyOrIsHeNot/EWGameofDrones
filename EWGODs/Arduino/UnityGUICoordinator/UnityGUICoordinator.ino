@@ -379,9 +379,9 @@ void processRxPacket(ZBRxResponse& rx, uintptr_t)
 
 
   // Note b.len() should be equal to the amount of data bytes expected in the payload minus the type byte
-  if (type == 1 && b.len() == 4) // distance packet received
+  if (type == 1 && b.len() == 4) // LIDAR packet received
   {
-    // Distance packets (used for Ultrasonics and LIDAR) are in the format:
+    // LIDAR packets are in the format:
     // <type (1 byte)> <sensorId (2 bytes)> <distance (2 bytes)>
 
     // Remove each data item from the payload IN THE ORDER IT WAS SENT and
@@ -418,17 +418,19 @@ void processRxPacket(ZBRxResponse& rx, uintptr_t)
 
     return;
   }
-  else if (type == 3 && b.len() == 2) // jam packet received
+  else if (type == 3 && b.len() == 6) // jam packet received
   {
     // jam packets arrive in the form:
     // |type (1 byte)| |sensorID (2 bytes)|
 
     int sensID = b.remove<int>();
+    int targetType = b.remove<int>();
+    int targetID = b.remove<int>();
     sensorID = String(sensID); 
 
     // construct packet for Unity GUI in the form:
-    // |type| , |sensorID|
-    packetToSend = String(type) + comma + sensorID;
+    // |type| , |sensorID| , |target type| , |target id|
+    packetToSend = String(type) + comma + sensorID + comma + String(targetType) + comma + String(targetID);
     
     //Send packet to Unity
     MATLABSerial.println(packetToSend);
@@ -469,6 +471,27 @@ void processRxPacket(ZBRxResponse& rx, uintptr_t)
     MATLABSerial.println(packetToSend);
 
     return;
+  }
+  else if (type == 6 && b.len() == 4) // Ultrasonic packet received
+  {
+    // Ultrasonic packets are in the format:
+    // <type (1 byte)> <sensorId (2 bytes)> <distance (2 bytes)>
+
+    // Remove each data item from the payload IN THE ORDER IT WAS SENT and
+    // then save them into temp variables
+    int sensID = b.remove<int>(); 
+    int distance = b.remove<int>();
+
+    // Convert temp variables into strings to sent to MATLAB
+    sensorID = String(sensID);
+    distStr = String(distance);
+
+    // Create a string package where the values in the array are as follows:
+    // |type| , |Sensor ID| , |Distance to Nearest Object| 
+    packetToSend = String(type) + comma + sensorID + comma + distStr;
+
+    //Send packet to MATLAB
+    MATLABSerial.println(packetToSend);
   }
     
   MATLABSerial.println(type);

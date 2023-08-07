@@ -141,12 +141,17 @@ void sendJamPacket()
   ZBTxRequest txRequest;
   txRequest.setAddress64(0x0013A20041C165F8); // address of Mario coordinator
 
-  AllocBuffer<5> packet;
+  AllocBuffer<7> packet;
+
+  int targetType = 1; // 0 is all sensor types targeted
+  int targetID = 0;   // 0 is all sensor ids targeted
 
   // Construct a jam packet in the format:
-  // |type (3)| |sensorID|
+  // |type (3)| |sensorID| |target type| |target id|
   packet.append<uint8_t>(3);
   packet.append<int>(sensorID);
+  packet.append<int>(targetType);
+  packet.append<int>(targetID);
   
   // prepare the packet
   txRequest.setPayload(packet.head, packet.len());

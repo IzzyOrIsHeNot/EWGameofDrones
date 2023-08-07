@@ -139,8 +139,8 @@ void sendDistancePacket()
     
     // Packet type & payload data items
     // packet format is:
-    // |type (1)| |sensorID| |distance|
-    packet.append<uint8_t>(1);
+    // |type (6)| |sensorID| |distance|
+    packet.append<uint8_t>(6);
     packet.append<int>(sensorID); 
     packet.append<int>(distance);
     // Note: Can add on another append<> for each additional 

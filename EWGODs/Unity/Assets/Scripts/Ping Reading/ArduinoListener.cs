@@ -9,6 +9,9 @@ using TMPro;
 // class that handles receiving data from the coordinator Arduino
 public class ArduinoListener : MonoBehaviour
 {
+	
+	List<JamOrder> JamOrders = new List<JamOrder>();
+	
 	// object representing the figurative connection
 	// between an instance of this class and an
 	// arduino.
@@ -33,7 +36,6 @@ public class ArduinoListener : MonoBehaviour
 	string Buffer;
 	
 	const float MAX_JAM_TIME_BUFFER = 0.2f;
-	float JamTimeBuffer = 0f;
 	
     // Start is called before the first frame update
     void Start()
@@ -107,30 +109,33 @@ public class ArduinoListener : MonoBehaviour
 	// Update is called once every frame
 	void Update()
 	{
+		
 		// do nothing if not connected to the Arduino Coordinator
 		if (Port == null)
 		{
 				return;
 		}
 		
-		
-		if (JamTimeBuffer > 0f)
+		// create jam pings for each order to jam
+		for (int i = 0; i < JamOrders.Count; i++)
 		{
-			// jam all sensors
-			foreach(Sensor sensorType in Sensors)
+			// check eligibility of jamming each type of sensor
+			foreach (Sensor sensorType in Sensors)
 			{
-				// jam all sensors of this sensor type
-				sensorType.Jam();
+				// if the sensor type matches the jam order (matching type or type is 0) then jam it
+				if (sensorType.Type == JamOrders[i].type || JamOrders[i].type == 0)
+				{
+					// jam all sensors of the type given
+					sensorType.Jam(JamOrders[i].id);
+				}
 			}
 			
-			JamTimeBuffer -= Time.deltaTime;
-			if (JamTimeBuffer < 0f)
-			{
-				JamTimeBuffer = 0f;
-			}
+			// reduce the amount of time the jam order has remaining
+			JamOrders[i].time -= Time.deltaTime;
 		}
 		
-			
+		// remove all jam orders that have run out of time
+		JamOrders.RemoveAll(j => j.time <= 0f);
 		
 		// read the data being transmitted
 		try
@@ -179,15 +184,55 @@ public class ArduinoListener : MonoBehaviour
 	
 	// parse data in a complete packet and handle it appropriately
 	void ParsePing(string input)
-	{
-		
-		
+	{	
 		// parse the data as a ping packet
 		Ping ping = new Ping(input);
 		
 		if (ping.type == 3)	// jam packet
 		{
-			JamTimeBuffer = MAX_JAM_TIME_BUFFER;
+			// create an order to jam one or more sensors
+			JamOrder newJamOrder = new JamOrder();
+			
+			// if there is additional data in the ping, use it to specify sensor type
+			if (ping.data.Count > 0)
+			{
+				// use the number given as the type of sensor to affect. 0 means affect all sensor types
+				newJamOrder.type = Convert.ToUInt16(ping.data[0]);	// sensor type to jam. 0 means jam all sensor types
+			}
+			else
+			{
+				// assume 0 (all sensor types) if not given in ping packet
+				newJamOrder.type = 0;
+			}
+			
+			// if there is additional data in the ping, use it to specify sensor id
+			if (ping.data.Count > 1)
+			{
+				// use the number given as the sensor id to affect. 0 means affect all sensor ids
+				newJamOrder.id = Convert.ToUInt16(ping.data[1]);	// sensor id to jam. 0 means jam all sensor ids
+			}
+			else
+			{
+				// assume 0 (all sensor ids) if not given in ping packet
+				newJamOrder.id = 0;
+			}
+			
+			newJamOrder.time = MAX_JAM_TIME_BUFFER;	// time for jam to last after last associated jam packet
+			
+			// if the jam order already exists, refresh it instead of creating a new one
+			foreach(JamOrder jam in JamOrders)
+			{
+				// check type and id to see if they match
+				if (jam.type == newJamOrder.type && jam.id == newJamOrder.id)
+				{
+					// if the jam order is the same, refresh the duration
+					jam.time = MAX_JAM_TIME_BUFFER;
+					return;
+				}
+			}
+			
+			// create a new jam order
+			JamOrders.Add(newJamOrder);
 			
 			return;
 		}
@@ -200,6 +245,7 @@ public class ArduinoListener : MonoBehaviour
 				// check the type of the ping packet and the type of the sensor
 				if (ping.type == sensorType.Type)
 				{
+					Debug.Log(ping.type);
 					// if the ping is for this type of sensor, handle the packet
 					sensorType.PlotPing(ping);
 					

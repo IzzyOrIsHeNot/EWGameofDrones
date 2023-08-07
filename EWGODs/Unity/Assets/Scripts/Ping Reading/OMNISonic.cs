@@ -33,8 +33,6 @@ public class OMNISonic : Sensor
 			Mathf.Sin(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation));
 		coord.z = (distance / 12f) * 
 			Mathf.Cos(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation));
-		Debug.Log((distance / 12f).ToString() + "ft * " + Mathf.Cos(Mathf.Deg2Rad * ((SensorData.vRotation) + vRotation)).ToString() + " = " + coord.z.ToString());
-		//coord *= Mathf.Sin(Mathf.Deg2Rad * (SensorData.vRotation + vRotation));
 		
 		coord = AddSensorPosition(coord);
 		
