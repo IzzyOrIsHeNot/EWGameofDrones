@@ -35,6 +35,77 @@ Pressing the ESCAPE key in this screen will return to the Sensor Placement scree
 7. Open the "Free Aspect" tab and select "Target (1920x1200)"
 8. You are now ready to continue development of the Sensor Operator GUI
 
+# **Sensor Packet Guide**
+
+**Expected LIDAR packet:**
+
+#
+[1, id, distance]
+- 1 = designated type number for LIDAR sensors
+- Id = id of sensor ping originates from
+- Distance = distance in feet measured from LIDAR sensor
+
+**Expected Ultrasonic packet:**
+
+#
+[6, id, distance]
+- 6 = designated type number for Ultrasonic sensors
+- Id = id of sensor ping originates from
+- Distance = distance in feet measured from LIDAR sensor
+
+**Expected RFID packet:**
+
+#
+[5, id]
+- 5 = designated type number for RFID sensors
+- Id = id of sensor ping originates from
+
+**Expected OMNISonic packet:**
+
+#
+[4, id, distance, horizontal rotation, vertical rotation]
+- 4 = designated type number for OMNISonic sensors
+- Id = id of sensor ping originates from
+- Distance = distance measured by OMNISonic sensor
+- Horizontal Rotation = horizontal rotation in degrees recorded by OMNISonic sensor where 0 is straight ahead with positive angles being counter-clockwise and negative angles being clockwise
+- Vertical Rotation = vertical rotation in degrees recorded by OMNISonic sensor where 0 degrees is straight up from the sensor and 180 degrees is straight down from the sensor
+
+**Expected Jam packet:**
+
+#
+[3, id, target type (optional), target id (optional)]
+- 3 = designated type number for jam packets
+- Id = id of jammer ping originates from (value currently unused)
+- Target Type = optional field designating the type of sensors affected by the jam ping. The value 0 in this field will cause all sensor types to be affected
+- Target Id = optional field designating the id of the sensor affected by the jam ping. The value 0 in this field will cause all sensor ids to be affected
+
+# **Developer Guide: Adding Sensors**
+
+**Add sensor sprite**
+
+1. Navigate to Assets/Resources/Images/ in the Unity Editor
+2. Right click and select "Import New Asset"
+3. Select desired image from computer
+4. Rename image to be exactly the name of the sensor type
+
+**Add branch in Arduino Coordinator**
+
+1. Open UnityGUICoordinator.ino with Arduino IDE
+2. Navigate to the processRxPacket() function
+3. Add an "else if" branch to the code with the condition: "type == \<SENSORTYPE\> && b.len() == \<PACKETLENGTH\>"
+  1. Replace SENSORTYPE with a type number to associate with your sensor type and PACKETLENGTH with the length of the packet sent out by your sensor's arduino code (not including the type byte)
+  2. Note: Creating the arduino code for custom sensors is beyond the scope of this guide, but you can use existing sensor code such as LIDAR.ino as an example
+4. Inside the else-if branch, extract data from the packet and send to the Unity GUI
+  1. Examples of this can be seen on the other branches of the else-if code.
+
+**Add class in Unity**
+
+1. Navigate to Assets/Scripts/Ping Reading/ in the Unity Editor
+2. Duplicate the file "SensorTemplate.cs"
+3. Rename the duplicate to the exact name of your sensor type (same as the sprite's name)
+4. Open the duplicate and change the line "public class SensorTemplate …" with "public class SENOSRNAME …"
+5. Utilize the comments in the template and examples from other sensor types such as LIDAR.cs, Ultrasonic.cs, and OMNISonic.cs to create your sensor.
+
 # **Classes**
 
 ## **Cage Configuration Setup**
