@@ -60,7 +60,7 @@ String currTime = "00:00:00";
 uint32_t currT = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
-int sensorID = 2; //ONLY LINE OF CODE THAT NEEDS TO BE UPDATED ON EACH SANDWICH
+int sensorID = 7; //ONLY LINE OF CODE THAT NEEDS TO BE UPDATED ON EACH SANDWICH
 ///////////////////////////////////////////////////////////////////////////////
 
 // Variables related to attached hardware (sensor & LED)

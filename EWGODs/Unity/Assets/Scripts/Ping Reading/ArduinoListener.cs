@@ -225,8 +225,8 @@ public class ArduinoListener : MonoBehaviour
 				// check type and id to see if they match
 				if (jam.type == newJamOrder.type && jam.id == newJamOrder.id)
 				{
-					// if the jam order is the same, refresh the duration
-					jam.time = MAX_JAM_TIME_BUFFER;
+					// if the jam order is the same, refresh the duration to the longest one
+					jam.time = Mathf.Max(jam.time, newJamOrder.time);
 					return;
 				}
 			}

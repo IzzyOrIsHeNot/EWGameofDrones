@@ -375,129 +375,21 @@ void processRxPacket(ZBRxResponse& rx, uintptr_t)
   Buffer b(rx.getData(), rx.getDataLength()); 
 
   // Check which kind of packet was sent (valid or null)
-    uint8_t type = b.remove<uint8_t>();
+  uint8_t type = b.remove<uint8_t>();
 
 
-  // Note b.len() should be equal to the amount of data bytes expected in the payload minus the type byte
-  if (type == 1 && b.len() == 4) // LIDAR packet received
+  packetToSend = String(type);// + comma + String(b.remove<int>());
+
+  // while there are arguments in the packet, add them to the gui packet
+  while (b.len() >= 2)
   {
-    // LIDAR packets are in the format:
-    // <type (1 byte)> <sensorId (2 bytes)> <distance (2 bytes)>
-
-    // Remove each data item from the payload IN THE ORDER IT WAS SENT and
-    // then save them into temp variables
-    int sensID = b.remove<int>(); 
-    int distance = b.remove<int>();
-
-    // Convert temp variables into strings to sent to MATLAB
-    sensorID = String(sensID);
-    distStr = String(distance);
-
-    // Create a string package where the values in the array are as follows:
-    // |type| , |Sensor ID| , |Distance to Nearest Object| 
-    packetToSend = String(type) + comma + sensorID + comma + distStr;
-
-    //Send packet to MATLAB
-    MATLABSerial.println(packetToSend);
-    
-    return;
+    // add the argument to the gui packet
+    packetToSend += comma + String(b.remove<int>());
   }
-  else if (type == 2 && b.len() == 2) // null packet received
-  {
-    digitalWrite(testLED, LOW);
-    int sensID = b.remove<int>();
-    sensorID = String(sensID); 
-    
-    // packet display (0,N or 1,N etc) 
-    
-    packetToSend = sensorID + comma + indicator;
-    
-    // Send packet to MATLAB
-    //  (The current GUI in Unity does not need the null packets)
-    //MATLABSerial.println(packetToSend);
+  MATLABSerial.println(packetToSend);
 
-    return;
-  }
-  else if (type == 3 && b.len() == 6) // jam packet received
-  {
-    // jam packets arrive in the form:
-    // |type (1 byte)| |sensorID (2 bytes)|
+  return;
 
-    int sensID = b.remove<int>();
-    int targetType = b.remove<int>();
-    int targetID = b.remove<int>();
-    sensorID = String(sensID); 
-
-    // construct packet for Unity GUI in the form:
-    // |type| , |sensorID| , |target type| , |target id|
-    packetToSend = String(type) + comma + sensorID + comma + String(targetType) + comma + String(targetID);
-    
-    //Send packet to Unity
-    MATLABSerial.println(packetToSend);
-
-    return;
-  }
-  else if (type == 4 && b.len() == 8) // OMNIUltrasonic packet received
-  {
-    // OMNISonic packets arrive in the format:
-    // |type (1 byte)| |sensorId (2 bytes)| |distance (2 bytes)| |horizontal rotation (2 bytes)|
-    //    |vertical rotation (2 bytes)|
-    int sensID = b.remove<int>();
-    int distance = b.remove<int>();
-    int hRotation = b.remove<int>();
-    int vRotation = b.remove<int>();
-
-    // construct packet in the format:
-    // |type| , |sensorId| , |distance| , |horizontal rotation|, |vertical rotation|
-    packetToSend = String(type) + comma + String(sensID) + comma + String(distance) + comma + String(hRotation) + comma + String(vRotation);
-
-    // send the packet to the GUI
-    MATLABSerial.println(packetToSend);
-
-    return;
-  }
-  else if (type == 5 && b.len() == 2) // RFID packet received
-  {
-    // extract the id from the packet
-    // RFID packets arrive in the format:
-    // |type (1 byte)| |ID (2 bytes)|
-    int ID = b.remove<int>();
-
-    // construct packet in the format:
-    // |type| , |id|
-    packetToSend = String(type) + comma + String(ID);
-
-    // send the packet to the GUI
-    MATLABSerial.println(packetToSend);
-
-    return;
-  }
-  else if (type == 6 && b.len() == 4) // Ultrasonic packet received
-  {
-    // Ultrasonic packets are in the format:
-    // <type (1 byte)> <sensorId (2 bytes)> <distance (2 bytes)>
-
-    // Remove each data item from the payload IN THE ORDER IT WAS SENT and
-    // then save them into temp variables
-    int sensID = b.remove<int>(); 
-    int distance = b.remove<int>();
-
-    // Convert temp variables into strings to sent to MATLAB
-    sensorID = String(sensID);
-    distStr = String(distance);
-
-    // Create a string package where the values in the array are as follows:
-    // |type| , |Sensor ID| , |Distance to Nearest Object| 
-    packetToSend = String(type) + comma + sensorID + comma + distStr;
-
-    //Send packet to MATLAB
-    MATLABSerial.println(packetToSend);
-  }
-    
-  MATLABSerial.println(type);
-  MATLABSerial.println(b.len());
-  MATLABSerial.println(F("Unknown or invalid packet"));
-  printResponse(rx, MATLABSerial);
 }
 
 
