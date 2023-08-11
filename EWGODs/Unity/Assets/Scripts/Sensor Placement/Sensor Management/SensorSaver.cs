@@ -11,6 +11,7 @@ public class SensorSaver : MonoBehaviour
 	public SensorConfigReader Reader;		// reads user input
 	public SensorDropdown SensorSelection;	// the dropdown selecting different sensors
 	public SensorPreview Preview;			// handles the sensor placement preview
+	public GameObject UnsavedWarning;		// unsaved changes warning
 	
     // Start is called before the first frame update
     void Start()
@@ -46,5 +47,8 @@ public class SensorSaver : MonoBehaviour
 		// hide the new sensor (not the preview)
 		Manager.ShowAllSensors();
 		Manager.HideSensor(currentConfig.id);
+		
+		// hide unsaved changes warning
+		UnsavedWarning.SetActive(false);
 	}
 }

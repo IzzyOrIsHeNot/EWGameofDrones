@@ -138,6 +138,7 @@ public class SensorDropdown : MonoBehaviour
 			
 			// all existing sensors should be visible
 			Manager.ShowAllSensors();
+			
 		}
 		else
 		{

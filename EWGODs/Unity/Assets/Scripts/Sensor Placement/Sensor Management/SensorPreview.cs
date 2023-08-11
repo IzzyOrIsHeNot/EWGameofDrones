@@ -15,6 +15,7 @@ public class SensorPreview : MonoBehaviour
 	public TMP_InputField YField;			// y text field
 	public TMP_InputField HRotationField;	// horizontal rotation text field
 	public TMP_InputField VRotationField;	// vertical rotation text field
+	public GameObject SaveWarning;			// unsaved changes warning text
 	
 	GameObject PreviewObject;		// reference to the visual sensor managed
 	SensorRenderer PreviewRenderer;	// reference to the visual sensor's SensorRenderer script
@@ -67,6 +68,10 @@ public class SensorPreview : MonoBehaviour
 		
 		// update the preview with the current configuration specified by the user
 		PreviewRenderer.UpdateConfig(Reader.ReadSensor());
+		
+		
+			// display unsaved changes warning
+			SaveWarning.SetActive(true);
 	}
 
 	// remove the visual preview
